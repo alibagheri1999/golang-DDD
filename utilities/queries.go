@@ -6,7 +6,7 @@ const (
 	GET_GIDT_BY_ID        = "SELECT id, sender_id, receiver_id, amount, status, created_at FROM gift_cards WHERE id = ? LIMIT 1"
 	GET_BY_ID             = "SELECT id, sender_id, receiver_id, amount, status, created_at FROM gift_cards WHERE id = ? LIMIT 1"
 	GET_GIDT_BY_STATUS    = "SELECT id, sender_id, receiver_id, amount, status, created_at FROM gift_cards WHERE status = ?"
-	UPDATE_STATUS         = "UPDATE gift_cards SET status = ? WHERE id = ?"
+	UPDATE_STATUS         = "UPDATE gift_cards SET status = ? WHERE id = ? AND status = 'sent'"
 	SHOW_VARS_TIMEOUT     = "SHOW VARIABLES LIKE 'wait_timeout'"
 	SHOW_VARS_CONNECTION  = "SHOW VARIABLES LIKE 'max_connections'"
 	GET_GIFT_BY_SENDER_ID = `

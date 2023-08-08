@@ -2,8 +2,10 @@ package application
 
 import (
 	"context"
+	"remote-task/domain/giftCart/DTO"
 	"remote-task/domain/giftCart/entity"
 	"remote-task/infrastructure/persistence/mysql"
+	"time"
 )
 
 type giftCartApp struct {
@@ -13,7 +15,7 @@ type giftCartApp struct {
 var _ GiftCartAppInterface = &giftCartApp{}
 
 type GiftCartAppInterface interface {
-	CreateGiftCard(c context.Context, giftCard *entity.GiftCard) error
+	CreateGiftCard(c context.Context, giftCard *DTO.SendGiftCartRequest) error
 	GetGiftCardByID(c context.Context, id int) (*entity.GiftCard, error)
 	GetGiftCardsByReceiverID(c context.Context, receiverID int) ([]entity.GiftCardJoinUserByReceiver, error)
 	GetGiftCardsBySenderID(c context.Context, senderID int) ([]entity.GiftCardJoinUserBySender, error)
@@ -21,8 +23,15 @@ type GiftCartAppInterface interface {
 	UpdateGiftCardStatus(c context.Context, id int, status string) error
 }
 
-func (g *giftCartApp) CreateGiftCard(c context.Context, giftCard *entity.GiftCard) error {
-	return g.gr.CreateGiftCard(c, giftCard)
+func (g *giftCartApp) CreateGiftCard(c context.Context, giftCard *DTO.SendGiftCartRequest) error {
+	gc := entity.GiftCard{
+		CreatedAt:  time.Now(),
+		Status:     "sent",
+		Amount:     giftCard.Amount,
+		SenderID:   giftCard.SenderID,
+		ReceiverID: giftCard.ReceiverID,
+	}
+	return g.gr.CreateGiftCard(c, &gc)
 }
 
 func (g *giftCartApp) GetGiftCardByID(c context.Context, id int) (*entity.GiftCard, error) {
