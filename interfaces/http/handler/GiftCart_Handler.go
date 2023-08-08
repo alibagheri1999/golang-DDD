@@ -14,7 +14,7 @@ type GiftCart struct {
 	ua  application.UserAppInterface
 }
 
-//GiftCart constructor
+// GiftCart constructor
 func NewGiftCartHandler(gcApp application.GiftCartAppInterface, uApp application.UserAppInterface) *GiftCart {
 	return &GiftCart{
 		gca: gcApp,
@@ -22,6 +22,15 @@ func NewGiftCartHandler(gcApp application.GiftCartAppInterface, uApp application
 	}
 }
 
+// SendGiftCart  send Gift Cart godoc
+// @Summary      sending gift cart
+// @Description  sending gift cart from sender to receiver
+// @Tags         GiftCart
+// @Param        request  body  string  true  "request body" SchemaExample({"sender_id":"int","receiver_id":"int","amount": float64})
+// @Success      201   {object}  DTO.SendGiftCartResponse
+// @Failure      400   {object}  DTO.SendGiftCartResponse
+// @Failure      404   {object}  DTO.SendGiftCartResponse
+// @Router       /api/v1/gift-cart/send [post]
 func (gc *GiftCart) SendGiftCart(c echo.Context) error {
 	var req DTO.SendGiftCartRequest
 	var res DTO.SendGiftCartResponse
@@ -58,6 +67,15 @@ func (gc *GiftCart) SendGiftCart(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
+// UpdateGiftCart  update Gift Cart godoc
+// @Summary      update gift cart
+// @Description  update status of gift cart to accept or reject
+// @Tags         GiftCart
+// @Param        request  body  string  true  "request body" SchemaExample({"gift_cart_id":"int","receiver_id":"int","status": string})
+// @Success      200   {object}  DTO.UpdateGiftCartResponse
+// @Failure      400   {object}  DTO.UpdateGiftCartResponse
+// @Failure      404   {object}  DTO.UpdateGiftCartResponse
+// @Router       /api/v1/gift-cart/update-status [patch]
 func (gc *GiftCart) UpdateGiftCart(c echo.Context) error {
 	var req DTO.UpdateGiftCartRequest
 	var res DTO.UpdateGiftCartResponse
@@ -94,6 +112,15 @@ func (gc *GiftCart) UpdateGiftCart(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
+// GetMyGiftCarts  get Gift Cart godoc
+// @Summary      get gift cart
+// @Description  getting all gift cart if stat is 1 it is accepted and if it is 2 we get rejected gift cart and at the end with number 3 we will see all sent status gift carts
+// @Tags         GiftCart
+// @Param        type  path      string  true  "type param"  receiverID  path      string  true  "receiverID param"
+// @Success      200   {object}  DTO.GetMyGiftCartsResponse
+// @Failure      400   {object}  DTO.GetMyGiftCartsResponse
+// @Failure      404   {object}  DTO.GetMyGiftCartsResponse
+// @Router       /api/v1/gift-cart/my-carts/:receiverID/:type [get]
 func (gc *GiftCart) GetMyGiftCarts(c echo.Context) error {
 	var res DTO.GetMyGiftCartsResponse
 	var result DTO.Result
@@ -132,6 +159,15 @@ func (gc *GiftCart) GetMyGiftCarts(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
+// GetMySentCarts  get sent Gift Cart godoc
+// @Summary      get sent gift cart
+// @Description  getting all sent gift cart if status is 1 it is accepted and if it is 2 we get rejected gift cart and at the end with number 3 we will see all sent status gift carts and anything expect these 3 number will give us all data
+// @Tags         GiftCart
+// @Param        senderID  path      string  true  "senderID param"  status  query  string  false  "status of gift"
+// @Success      200   {object}  DTO.GetMySentGiftCartsResponse
+// @Failure      400   {object}  DTO.GetMySentGiftCartsResponse
+// @Failure      404   {object}  DTO.GetMySentGiftCartsResponse
+// @Router       /api/v1/gift-cart/my-carts/:receiverID/:type [get]
 func (gc *GiftCart) GetMySentCarts(c echo.Context) error {
 	var res DTO.GetMySentGiftCartsResponse
 	var result DTO.SentResult
