@@ -2,9 +2,9 @@ package mysql
 
 import (
 	"context"
-	"remote-task/domain/giftCart/giftCartConst"
 	"remote-task/domain/user/entity"
 	"remote-task/domain/user/repository"
+	"remote-task/domain/user/userConst"
 	"remote-task/utilities"
 	"sync"
 )
@@ -34,10 +34,10 @@ func (r *UserRepositoryImpl) GetUserByID(c context.Context, id int) (*entity.Use
 		r.mysqlRepo.setStmt("stmtGetUserByID", ps)
 		stmt = ps
 	}
-	giftCard := &entity.User{}
-	err2 := stmt.QueryRowContext(c, id).Scan(&giftCard.ID, &giftCard.Username, &giftCard.Email, &giftCard.CreatedAt)
+	user := &entity.User{}
+	err2 := stmt.QueryRowContext(c, id).Scan(&user.ID, &user.Username, &user.Email, &user.CreatedAt)
 	if err2 != nil {
-		return nil, giftCartConst.ERR_NOT_FOUND
+		return nil, userConst.ERR_NOT_FOUND
 	}
-	return giftCard, nil
+	return user, nil
 }

@@ -5,3 +5,8 @@ type SendGiftCartRequest struct {
 	ReceiverID int     `json:"receiver_id"`
 	Amount     float64 `json:"amount"`
 }
+
+type UpdateGiftCartRequest struct {
+	ReceiverID int    `json:"receiver_id"`
+	Status     string `json:"status"`
+}

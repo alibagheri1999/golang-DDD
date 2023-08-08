@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/joho/godotenv"
+	m "github.com/labstack/echo/v4/middleware"
 	"log"
 	"os"
 	"remote-task/infrastructure/persistence/mysql"
@@ -39,7 +40,9 @@ func main() {
 	handlers := handler.New(*service)
 	router := routers.NewRouter()
 	router.Use(middleware.HealthCheck(repo))
+	router.Use(m.CORS())
 	router.Use(middleware.CORS())
+
 	routers.RegisterRoutes(router, handlers)
 	routers.NewServer(router, iPort, time.Duration(1)).StartListening()
 }

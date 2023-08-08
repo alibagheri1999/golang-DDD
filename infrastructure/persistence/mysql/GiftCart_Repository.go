@@ -209,8 +209,9 @@ func (r *GiftCardRepositoryImpl) UpdateGiftCardStatus(c context.Context, id int,
 		r.mysqlRepo.setStmt("stmtUpdateGiftCart", ps)
 		stmt = ps
 	}
+	log.Println(id)
 	res, err := stmt.ExecContext(c,
-		status, id)
+		status, id, "sent")
 	if err != nil {
 		log.Println(err)
 		return giftCartConst.ERR_UPDATE_GIFT_CART
