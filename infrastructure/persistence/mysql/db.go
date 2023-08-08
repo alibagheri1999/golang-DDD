@@ -4,16 +4,19 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
-	giftRepo "remote-task/domain/giftCart/repository"
-	userRepo "remote-task/domain/user/repository"
-	"remote-task/infrastructure/persistence/mysql/giftCart"
-	"remote-task/infrastructure/persistence/mysql/user"
+	"log"
+	"math"
+	//giftRepo "remote-task/domain/giftCart/repository"
+	//userRepo "remote-task/domain/user/repository"
+	"remote-task/utilities"
+	"sync"
+	"time"
 )
 
 type Repositories struct {
-	GiftCart giftRepo.GiftCardRepository
-	User     userRepo.UserRepository
-	db       *sql.DB
+	Db         *sql.DB
+	Statements map[string]*sql.Stmt
+	mu         sync.Mutex
 }
 
 func NewRepositories(DbUser, DbPassword, DbPort, DbHost, DbName string) (*Repositories, error) {
@@ -30,27 +33,69 @@ func NewRepositories(DbUser, DbPassword, DbPort, DbHost, DbName string) (*Reposi
 	if err != nil {
 		fmt.Println("db connection failed", err)
 	}
+	db.SetMaxOpenConns(0)
+	db.SetMaxIdleConns(2)
+
 	if pingErr := db.Ping(); pingErr != nil {
-		fmt.Println("Ping", pingErr)
+		log.Println("Err mysql ping", pingErr)
 	} else {
-		fmt.Println("connection is ok")
+		log.Println("Success mysql connection is ok")
 	}
+
+	var skip string
+	var maxConnections int
+	maxConErr := db.QueryRow(utilities.SHOW_VARS_CONNECTION).Scan(&skip, &maxConnections)
+	if maxConErr != nil {
+		log.Println("Err mysql getting the max_connections", maxConErr)
+	}
+	maxConnections = int(math.Floor(float64(maxConnections) * 0.9))
+	if maxConnections == 0 {
+		maxConnections = 100
+	}
+	db.SetMaxOpenConns(maxConnections)
+
+	var waitTimeout int
+	waitErr := db.QueryRow(utilities.SHOW_VARS_TIMEOUT).Scan(&skip, &waitTimeout)
+	if waitErr != nil {
+		log.Println("Err mysql getting the wait_timeout", waitErr)
+	}
+	if waitTimeout == 0 {
+		waitTimeout = 180
+	}
+	waitTimeout = int(math.Min(float64(waitTimeout), 180))
+	t := time.Duration(waitTimeout) * time.Second
+	db.SetConnMaxLifetime(t)
+
 	return &Repositories{
-		GiftCart: giftCart.NewGiftCardRepository(db),
-		User:     user.NewUserRepository(db),
-		db:       db,
+		Db:         db,
+		Statements: make(map[string]*sql.Stmt),
 	}, nil
 }
 
 //closes the  database connection
-func (s *Repositories) Close() error {
-	return s.db.Close()
+func (mr *Repositories) stmt(id string) *sql.Stmt {
+	return mr.Statements[id]
 }
 
-func (s *Repositories) Ping() error {
-	if err := s.db.Ping(); err != nil {
+func (mr *Repositories) setStmt(id string, stmt *sql.Stmt) {
+	mr.Statements[id] = stmt
+}
+
+func (mr *Repositories) Ping() error {
+	if err := mr.Db.Ping(); err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func (mr *Repositories) DB() *sql.DB {
+	return mr.Db
+}
+
+func (mr *Repositories) Close() {
+	for _, stmt := range mr.Statements {
+		_ = stmt.Close()
+	}
+	_ = mr.Db.Close()
 }

@@ -1,12 +1,15 @@
 package repository
 
-import "remote-task/domain/giftCart/entity"
+import (
+	"context"
+	"remote-task/domain/giftCart/entity"
+)
 
 type GiftCardRepository interface {
-	CreateGiftCard(giftCard *entity.GiftCard) error
-	GetGiftCardByID(id int) (*entity.GiftCard, error)
-	GetGiftCardsByReceiverID(receiverID int) ([]entity.GiftCardJoinUserByReceiver, error)
-	GetGiftCardsBySenderID(senderID int) ([]entity.GiftCardJoinUserBySender, error)
-	GetGiftCardsByStatus(status string) ([]entity.GiftCard, error)
-	UpdateGiftCardStatus(id int, status string) error
+	CreateGiftCard(c context.Context, giftCard *entity.GiftCard) error
+	GetGiftCardByID(c context.Context, id int) (*entity.GiftCard, error)
+	GetGiftCardsByReceiverID(c context.Context, receiverID int) ([]entity.GiftCardJoinUserByReceiver, error)
+	GetGiftCardsBySenderID(c context.Context, senderID int) ([]entity.GiftCardJoinUserBySender, error)
+	GetGiftCardsByStatus(c context.Context, status string) ([]entity.GiftCard, error)
+	UpdateGiftCardStatus(c context.Context, id int, status string) error
 }

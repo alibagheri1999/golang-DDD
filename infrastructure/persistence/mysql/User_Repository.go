@@ -1,4 +1,4 @@
-package user
+package mysql
 
 import (
 	"database/sql"
