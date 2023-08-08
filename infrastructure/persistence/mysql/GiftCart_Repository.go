@@ -95,10 +95,13 @@ func (r *GiftCardRepositoryImpl) GetGiftCardsByReceiverID(c context.Context, rec
 		r.mysqlRepo.setStmt("stmtGetGiftCardsByReceiverID", ps)
 		stmt = ps
 	}
-	if stat == 1 {
+	switch stat {
+	case 1:
 		status = "accept"
-	} else {
+	case 2:
 		status = "reject"
+	case 3:
+		status = "sent"
 	}
 	rows, err := stmt.QueryContext(c, receiverID, status)
 	if err != nil {

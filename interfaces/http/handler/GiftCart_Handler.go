@@ -109,7 +109,7 @@ func (gc *GiftCart) GetMyGiftCarts(c echo.Context) error {
 		res.Error = "converting failed"
 		return echo.NewHTTPError(http.StatusBadRequest, res)
 	}
-	if iStat != 1 && iStat != 2 {
+	if iStat != 1 && iStat != 2 && iStat != 3 {
 		res.Code = http.StatusBadRequest
 		res.Error = "type must be 1 or 2"
 		return echo.NewHTTPError(http.StatusBadRequest, res)
