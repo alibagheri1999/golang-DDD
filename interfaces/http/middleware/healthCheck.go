@@ -13,7 +13,7 @@ func HealthCheck(mysqlRepo *mysql.Repositories) echo.MiddlewareFunc {
 
 			isDown := false
 			if err := mysqlRepo.Ping(); err != nil {
-				log.Println("Err http health check middleware, can't ping mysql %v", err)
+				log.Printf("Err http health check middleware, can't ping mysql %v\n", err)
 				isDown = true
 			}
 			if isDown {

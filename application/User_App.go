@@ -3,11 +3,11 @@ package application
 import (
 	"context"
 	"remote-task/domain/user/entity"
-	"remote-task/infrastructure/persistence/mysql"
+	"remote-task/domain/user/repository"
 )
 
 type userApp struct {
-	ur mysql.UserRepositoryImpl
+	ur repository.UserRepository
 }
 
 var _ UserAppInterface = &userApp{}

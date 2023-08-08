@@ -30,7 +30,6 @@ func (r *UserRepositoryImpl) GetUserByID(c context.Context, id int) (*entity.Use
 		ps, err := r.mysqlRepo.Db.PrepareContext(c, query)
 		if err != nil {
 			return nil, err
-
 		}
 		r.mysqlRepo.setStmt("stmtGetUserByID", ps)
 		stmt = ps

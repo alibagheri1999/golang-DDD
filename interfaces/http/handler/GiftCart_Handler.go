@@ -8,15 +8,15 @@ import (
 )
 
 type GiftCart struct {
-	giftCartApp application.GiftCartAppInterface
-	userApp     application.UserAppInterface
+	gca application.GiftCartAppInterface
+	ua  application.UserAppInterface
 }
 
 //GiftCart constructor
 func NewGiftCartHandler(gcApp application.GiftCartAppInterface, uApp application.UserAppInterface) *GiftCart {
 	return &GiftCart{
-		giftCartApp: gcApp,
-		userApp:     uApp,
+		gca: gcApp,
+		ua:  uApp,
 	}
 }
 
@@ -30,13 +30,26 @@ func (gc *GiftCart) SendGiftCart(c echo.Context) error {
 		res.Code = http.StatusBadRequest
 		res.Error = err.Error()
 		res.Message = "validation error"
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, res)
 	}
-
-	err2 := gc.giftCartApp.CreateGiftCard(c.Request().Context(), &req)
+	sUser, err1 := gc.ua.GetUserByID(c.Request().Context(), req.ReceiverID)
+	if err1 != nil || sUser.Username == "" {
+		res.Code = http.StatusNotFound
+		res.Error = err1.Error()
+		res.Message = "Receiver error"
+		return echo.NewHTTPError(http.StatusNotFound, res)
+	}
+	rUser, err2 := gc.ua.GetUserByID(c.Request().Context(), req.SenderID)
+	if err1 != nil || rUser.Username == "" {
+		res.Code = http.StatusNotFound
+		res.Error = err2.Error()
+		res.Message = "Sender error"
+		return echo.NewHTTPError(http.StatusNotFound, res)
+	}
+	err3 := gc.gca.CreateGiftCard(c.Request().Context(), &req)
 	if err2 != nil {
 		res.Code = http.StatusBadRequest
-		res.Error = err2.Error()
+		res.Error = err3.Error()
 		res.Message = "validation error"
 		return c.JSON(res.Code, res)
 	}

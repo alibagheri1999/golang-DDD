@@ -4,11 +4,13 @@ import (
 	"context"
 	"database/sql"
 	"log"
+	"remote-task/domain/giftCart/DTO"
 	"remote-task/domain/giftCart/entity"
 	"remote-task/domain/giftCart/giftCartConst"
 	"remote-task/domain/giftCart/repository"
 	"remote-task/utilities"
 	"sync"
+	"time"
 )
 
 // GiftCardRepositoryImpl is an implementation of the GiftCardRepository
@@ -25,9 +27,16 @@ func NewGiftCardRepository(repo *Repositories) repository.GiftCardRepository {
 }
 
 // CreateGiftCard creates a new gift card in the database
-func (r *GiftCardRepositoryImpl) CreateGiftCard(c context.Context, giftCard *entity.GiftCard) error {
+func (r *GiftCardRepositoryImpl) CreateGiftCard(c context.Context, giftCard *DTO.SendGiftCartRequest) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
+	gc := entity.GiftCard{
+		CreatedAt:  time.Now(),
+		Status:     "sent",
+		Amount:     giftCard.Amount,
+		SenderID:   giftCard.SenderID,
+		ReceiverID: giftCard.ReceiverID,
+	}
 	query := utilities.INSERT_GIFT
 	stmt := r.mysqlRepo.stmt("stmtCreateGiftCart")
 	if stmt == nil {
@@ -39,7 +48,7 @@ func (r *GiftCardRepositoryImpl) CreateGiftCard(c context.Context, giftCard *ent
 		stmt = ps
 	}
 	_, err := stmt.ExecContext(c,
-		giftCard.SenderID, giftCard.ReceiverID, giftCard.Amount, giftCard.Status, giftCard.CreatedAt,
+		&gc.SenderID, &gc.ReceiverID, &gc.Amount, &gc.Status, &gc.CreatedAt,
 	)
 	if err != nil {
 		log.Println(err)

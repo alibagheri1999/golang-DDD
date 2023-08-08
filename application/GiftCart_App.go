@@ -4,12 +4,11 @@ import (
 	"context"
 	"remote-task/domain/giftCart/DTO"
 	"remote-task/domain/giftCart/entity"
-	"remote-task/infrastructure/persistence/mysql"
-	"time"
+	"remote-task/domain/giftCart/repository"
 )
 
 type giftCartApp struct {
-	gr mysql.GiftCardRepositoryImpl
+	gr repository.GiftCardRepository
 }
 
 var _ GiftCartAppInterface = &giftCartApp{}
@@ -24,14 +23,7 @@ type GiftCartAppInterface interface {
 }
 
 func (g *giftCartApp) CreateGiftCard(c context.Context, giftCard *DTO.SendGiftCartRequest) error {
-	gc := entity.GiftCard{
-		CreatedAt:  time.Now(),
-		Status:     "sent",
-		Amount:     giftCard.Amount,
-		SenderID:   giftCard.SenderID,
-		ReceiverID: giftCard.ReceiverID,
-	}
-	return g.gr.CreateGiftCard(c, &gc)
+	return g.gr.CreateGiftCard(c, giftCard)
 }
 
 func (g *giftCartApp) GetGiftCardByID(c context.Context, id int) (*entity.GiftCard, error) {
