@@ -175,11 +175,11 @@ func (gc *GiftCart) GetMySentCarts(c echo.Context) error {
 	res.Error = ""
 	res.Message = result
 	SenderID := c.Param("senderID")
-	iStatus, err1 := strconv.Atoi(c.QueryParam("status"))
+	iStatus, err := strconv.Atoi(c.QueryParam("status"))
 	iSenderID, err1 := strconv.Atoi(SenderID)
-	if err1 != nil {
+	if err1 != nil || err != nil {
 		res.Code = http.StatusBadRequest
-		res.Error = err1.Error()
+		res.Error = "validation error"
 		return echo.NewHTTPError(http.StatusBadRequest, res)
 	}
 	sUser, err2 := gc.ua.GetUserByID(c.Request().Context(), iSenderID)
