@@ -1,6 +1,8 @@
 package DTO
 
-import "remote-task/domain/giftCart/entity"
+import (
+	"remote-task/domain/giftCart/param"
+)
 
 type SendGiftCartResponse struct {
 	Message string `json:"message"`
@@ -20,8 +22,8 @@ type GetMyGiftCartsResponse struct {
 	Code    int    `json:"code"`
 }
 type Result struct {
-	Count int                                 `json:"count"`
-	Data  []entity.GiftCardJoinUserByReceiver `json:"'data'"`
+	Count int                                `json:"count"`
+	Data  []param.GiftCardJoinUserByReceiver `json:"'data'"`
 }
 
 type GetMySentGiftCartsResponse struct {
@@ -31,6 +33,6 @@ type GetMySentGiftCartsResponse struct {
 }
 
 type SentResult struct {
-	Count int                               `json:"count"`
-	Data  []entity.GiftCardJoinUserBySender `json:"'data'"`
+	Count int                              `json:"count"`
+	Data  []param.GiftCardJoinUserBySender `json:"'data'"`
 }

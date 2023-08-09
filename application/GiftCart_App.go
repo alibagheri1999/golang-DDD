@@ -4,6 +4,7 @@ import (
 	"context"
 	"remote-task/domain/giftCart/DTO"
 	"remote-task/domain/giftCart/entity"
+	"remote-task/domain/giftCart/param"
 	"remote-task/domain/giftCart/repository"
 )
 
@@ -16,8 +17,8 @@ var _ GiftCartAppInterface = &giftCartApp{}
 type GiftCartAppInterface interface {
 	CreateGiftCard(c context.Context, giftCard *DTO.SendGiftCartRequest) error
 	GetGiftCardByID(c context.Context, id int) (*entity.GiftCard, error)
-	GetGiftCardsByReceiverID(c context.Context, receiverID int, stat int) ([]entity.GiftCardJoinUserByReceiver, error)
-	GetGiftCardsBySenderID(c context.Context, senderID int, stat int) ([]entity.GiftCardJoinUserBySender, error)
+	GetGiftCardsByReceiverID(c context.Context, receiverID int, stat int) ([]param.GiftCardJoinUserByReceiver, error)
+	GetGiftCardsBySenderID(c context.Context, senderID int, stat int) ([]param.GiftCardJoinUserBySender, error)
 	GetGiftCardsByStatus(c context.Context, status string) ([]entity.GiftCard, error)
 	UpdateGiftCardStatus(c context.Context, receiverID int, giftCartID int, status string) error
 }
@@ -30,11 +31,11 @@ func (g *giftCartApp) GetGiftCardByID(c context.Context, id int) (*entity.GiftCa
 	return g.gr.GetGiftCardByID(c, id)
 }
 
-func (g *giftCartApp) GetGiftCardsByReceiverID(c context.Context, receiverID int, stat int) ([]entity.GiftCardJoinUserByReceiver, error) {
+func (g *giftCartApp) GetGiftCardsByReceiverID(c context.Context, receiverID int, stat int) ([]param.GiftCardJoinUserByReceiver, error) {
 	return g.gr.GetGiftCardsByReceiverID(c, receiverID, stat)
 }
 
-func (g *giftCartApp) GetGiftCardsBySenderID(c context.Context, senderID int, stat int) ([]entity.GiftCardJoinUserBySender, error) {
+func (g *giftCartApp) GetGiftCardsBySenderID(c context.Context, senderID int, stat int) ([]param.GiftCardJoinUserBySender, error) {
 	return g.gr.GetGiftCardsBySenderID(c, senderID, stat)
 }
 

@@ -72,12 +72,12 @@ func NewRepositories(DbUser, DbPassword, DbPort, DbHost, DbName string) (*Reposi
 	}, nil
 }
 
-//closes the  database connection
-func (mr *Repositories) stmt(id string) *sql.Stmt {
+// closes the  database connection
+func (mr *Repositories) Stmt(id string) *sql.Stmt {
 	return mr.Statements[id]
 }
 
-func (mr *Repositories) setStmt(id string, stmt *sql.Stmt) {
+func (mr *Repositories) SetStmt(id string, stmt *sql.Stmt) {
 	mr.Statements[id] = stmt
 }
 

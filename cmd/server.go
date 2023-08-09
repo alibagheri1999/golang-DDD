@@ -5,6 +5,8 @@ import (
 	m "github.com/labstack/echo/v4/middleware"
 	"log"
 	"os"
+	"remote-task/domain/giftCart/repository"
+	repository2 "remote-task/domain/user/repository"
 	"remote-task/infrastructure/persistence/mysql"
 	"remote-task/interfaces/http/handler"
 	"remote-task/interfaces/http/middleware"
@@ -34,8 +36,8 @@ func main() {
 		panic(err)
 	}
 	defer repo.Close()
-	GiftCarRepo := mysql.NewGiftCardRepository(repo)
-	UserRepo := mysql.NewUserRepository(repo)
+	GiftCarRepo := repository.NewGiftCardRepository(repo)
+	UserRepo := repository2.NewUserRepository(repo)
 	giftCartService := handler.NewGiftCartHandler(GiftCarRepo, UserRepo)
 	generalService := handler.NewGeneralHandler()
 	handlers := handler.New(*giftCartService, *generalService)
