@@ -5,6 +5,9 @@ github.com/KyleBanks/depth
 ## explicit; go 1.19
 # github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578
 ## explicit
+# github.com/badoux/checkmail v1.2.1
+## explicit; go 1.14
+github.com/badoux/checkmail
 # github.com/cpuguy83/go-md2man/v2 v2.0.2
 ## explicit; go 1.11
 # github.com/davecgh/go-spew v1.1.1

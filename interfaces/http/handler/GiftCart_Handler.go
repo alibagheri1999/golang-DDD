@@ -43,6 +43,13 @@ func (gc *GiftCart) SendGiftCart(c echo.Context) error {
 		res.Message = "validation error"
 		return echo.NewHTTPError(http.StatusBadRequest, res)
 	}
+	validateReq := req.SendGiftValidate()
+	if len(validateReq) > 0 {
+		res.Code = http.StatusUnprocessableEntity
+		res.Error = "entity error"
+		res.Message = validateReq
+		return echo.NewHTTPError(http.StatusUnprocessableEntity, res)
+	}
 	sUser, err1 := gc.ua.GetByID(c.Request().Context(), req.ReceiverID)
 	if err1 != nil || sUser.Username == "" {
 		res.Code = http.StatusNotFound
@@ -87,6 +94,13 @@ func (gc *GiftCart) UpdateGiftCart(c echo.Context) error {
 		res.Error = err.Error()
 		res.Message = "validation error"
 		return echo.NewHTTPError(http.StatusBadRequest, res)
+	}
+	validateReq := req.UpdateGiftValidate()
+	if len(validateReq) > 0 {
+		res.Code = http.StatusUnprocessableEntity
+		res.Error = "entity error"
+		res.Message = validateReq
+		return echo.NewHTTPError(http.StatusUnprocessableEntity, res)
 	}
 	status := strings.ToLower(req.Status)
 	if status != "accept" && status != "reject" {

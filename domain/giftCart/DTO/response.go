@@ -5,15 +5,15 @@ import (
 )
 
 type SendGiftCartResponse struct {
-	Message string `json:"message"`
-	Error   string `json:"error"`
-	Code    int    `json:"code"`
+	Message interface{} `json:"message"`
+	Error   string      `json:"error"`
+	Code    int         `json:"code"`
 }
 
 type UpdateGiftCartResponse struct {
-	Message string `json:"message"`
-	Error   string `json:"error"`
-	Code    int    `json:"code"`
+	Message interface{} `json:"message"`
+	Error   string      `json:"error"`
+	Code    int         `json:"code"`
 }
 
 type GetMyGiftCartsResponse struct {
