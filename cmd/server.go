@@ -15,10 +15,10 @@ import (
 )
 
 func main() {
-	applyMigrations := true
 	appConfig.Init()
 	dbCfg := appConfig.Get().Mysql
 	appCfg := appConfig.Get().App
+	applyMigrations := appCfg.ApplyMigrations
 	repo, err := mysql.NewRepositories(dbCfg.Username, dbCfg.Password, dbCfg.Port, dbCfg.Host, dbCfg.Name)
 	if err != nil {
 		panic(err)

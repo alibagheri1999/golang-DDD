@@ -6,9 +6,10 @@ type Config struct {
 }
 
 type AppConfig struct {
-	Name string `mapstructure:"HOST_IP" validate:"required"`
-	Env  string `mapstructure:"ENV" validate:"required"`
-	Port int    `mapstructure:"APP_PORT" validate:"required"`
+	Name            string `mapstructure:"HOST_IP" validate:"required"`
+	Env             string `mapstructure:"ENV" validate:"required"`
+	Port            int    `mapstructure:"APP_PORT" validate:"required"`
+	ApplyMigrations bool   `mapstructure:"APPLY_MIGRATION" validate:"required"`
 }
 
 type MysqlConfig struct {
