@@ -57,7 +57,7 @@ func (gc *GiftCart) SendGiftCart(c echo.Context) error {
 		res.Message = "Sender error"
 		return echo.NewHTTPError(http.StatusNotFound, res)
 	}
-	err3 := gc.gca.CreateGiftCard(c.Request().Context(), &req)
+	err3 := gc.gca.Create(c.Request().Context(), &req)
 	if err3 != nil {
 		res.Code = http.StatusBadRequest
 		res.Error = err3.Error()
@@ -102,7 +102,7 @@ func (gc *GiftCart) UpdateGiftCart(c echo.Context) error {
 		res.Message = "Receiver error"
 		return echo.NewHTTPError(http.StatusNotFound, res)
 	}
-	err2 := gc.gca.UpdateGiftCardStatus(c.Request().Context(), req.ReceiverID, req.GiftCartID, req.Status)
+	err2 := gc.gca.UpdateStatus(c.Request().Context(), req.ReceiverID, req.GiftCartID, req.Status)
 	if err2 != nil {
 		res.Code = http.StatusBadRequest
 		res.Error = err2.Error()
@@ -147,7 +147,7 @@ func (gc *GiftCart) GetMyGiftCarts(c echo.Context) error {
 		res.Error = err2.Error()
 		return echo.NewHTTPError(http.StatusNotFound, res)
 	}
-	r, err3 := gc.gca.GetGiftCardsByReceiverID(c.Request().Context(), iReceiverID, iStat)
+	r, err3 := gc.gca.GetByReceiverID(c.Request().Context(), iReceiverID, iStat)
 	if err3 != nil {
 		res.Code = http.StatusBadRequest
 		res.Error = err3.Error()
@@ -188,7 +188,7 @@ func (gc *GiftCart) GetMySentCarts(c echo.Context) error {
 		res.Error = err2.Error()
 		return echo.NewHTTPError(http.StatusNotFound, res)
 	}
-	r, err3 := gc.gca.GetGiftCardsBySenderID(c.Request().Context(), iSenderID, iStatus)
+	r, err3 := gc.gca.GetBySenderID(c.Request().Context(), iSenderID, iStatus)
 	if err3 != nil {
 		res.Code = http.StatusBadRequest
 		res.Error = err3.Error()

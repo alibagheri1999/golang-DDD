@@ -27,8 +27,8 @@ func NewGiftCardRepository(repo *mysql.Repositories) GiftCardRepository {
 	}
 }
 
-// CreateGiftCard creates a new gift card in the database
-func (r *GiftCardRepositoryImpl) CreateGiftCard(c context.Context, giftCard *DTO.SendGiftCartRequest) error {
+// Create creates a new gift card in the database
+func (r *GiftCardRepositoryImpl) Create(c context.Context, giftCard *DTO.SendGiftCartRequest) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	gc := entity.GiftCard{
@@ -58,8 +58,8 @@ func (r *GiftCardRepositoryImpl) CreateGiftCard(c context.Context, giftCard *DTO
 	return nil
 }
 
-// GetGiftCardByID retrieves a gift card from the database by its ID
-func (r *GiftCardRepositoryImpl) GetGiftCardByID(c context.Context, id int) (*entity.GiftCard, error) {
+// GetByID retrieves a gift card from the database by its ID
+func (r *GiftCardRepositoryImpl) GetByID(c context.Context, id int) (*entity.GiftCard, error) {
 	query := utilities.GET_GIDT_BY_ID
 	stmt := r.mysqlRepo.Stmt("stmtGetGiftCardByID")
 	if stmt == nil {
@@ -81,8 +81,8 @@ func (r *GiftCardRepositoryImpl) GetGiftCardByID(c context.Context, id int) (*en
 	return giftCard, nil
 }
 
-// GetGiftCardsByReceiverID retrieves a gift card from the database by its ReceiverID
-func (r *GiftCardRepositoryImpl) GetGiftCardsByReceiverID(c context.Context, receiverID int, stat int) ([]param.GiftCardJoinUserByReceiver, error) {
+// GetByReceiverID retrieves a gift card from the database by its ReceiverID
+func (r *GiftCardRepositoryImpl) GetByReceiverID(c context.Context, receiverID int, stat int) ([]param.GiftCardJoinUserByReceiver, error) {
 	query := utilities.GET_GIFT_BY_RECEIVER_ID
 	var status string
 	stmt := r.mysqlRepo.Stmt("stmtGetGiftCardsByReceiverID")
@@ -127,8 +127,8 @@ func (r *GiftCardRepositoryImpl) GetGiftCardsByReceiverID(c context.Context, rec
 	return giftCards, nil
 }
 
-// GetGiftCardsBySenderID retrieves a gift card from the database by its SenderID
-func (r *GiftCardRepositoryImpl) GetGiftCardsBySenderID(c context.Context, senderID int, stat int) ([]param.GiftCardJoinUserBySender, error) {
+// GetBySenderID retrieves a gift card from the database by its SenderID
+func (r *GiftCardRepositoryImpl) GetBySenderID(c context.Context, senderID int, stat int) ([]param.GiftCardJoinUserBySender, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	query := utilities.GET_GIFT_BY_SENDER_ID
@@ -172,48 +172,14 @@ func (r *GiftCardRepositoryImpl) GetGiftCardsBySenderID(c context.Context, sende
 	return giftCards, nil
 }
 
-// GetGiftCardsByStatus retrieves all gift cards from the database by their Status
-func (r *GiftCardRepositoryImpl) GetGiftCardsByStatus(c context.Context, status string) ([]entity.GiftCard, error) {
+// UpdateStatus update a gift card in the database in terms of status
+func (r *GiftCardRepositoryImpl) UpdateStatus(c context.Context, receiverID int, giftCartID int, status string) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	query := utilities.GET_GIDT_BY_STATUS
-	stmt := r.mysqlRepo.Stmt("stmtGetGiftCardsByStatus")
-	if stmt == nil {
-		ps, err := r.mysqlRepo.Db.PrepareContext(c, query)
-		if err != nil {
-			log.Printf("prepare context error: %v\n", err)
-			return nil, err
-
-		}
-		r.mysqlRepo.SetStmt("stmtGetGiftCardsByStatus", ps)
-		stmt = ps
-	}
-	rows, err := stmt.QueryContext(c, status)
+	_, err := r.GetByID(c, giftCartID)
 	if err != nil {
-		return nil, err
+		return giftCartConst.ERR_NOT_FOUND
 	}
-	defer func(rows *sql.Rows) {
-		if err := rows.Close(); err != nil {
-			log.Println("Error closing rows:", err)
-		}
-	}(rows)
-	var giftCards []entity.GiftCard
-	for rows.Next() {
-		giftCard := &entity.GiftCard{}
-		err := rows.Scan(&giftCard.ID, &giftCard.SenderID, &giftCard.ReceiverID, &giftCard.Amount, &giftCard.Status, &giftCard.CreatedAt)
-		if err != nil {
-			return nil, giftCartConst.ERR_NOT_FOUND
-		}
-		giftCards = append(giftCards, *giftCard)
-	}
-
-	return giftCards, nil
-}
-
-// UpdateGiftCardStatus update a gift card in the database in terms of status
-func (r *GiftCardRepositoryImpl) UpdateGiftCardStatus(c context.Context, receiverID int, giftCartID int, status string) error {
-	r.mu.Lock()
-	defer r.mu.Unlock()
 	query := utilities.UPDATE_STATUS
 	stmt := r.mysqlRepo.Stmt("stmtUpdateGiftCart")
 	if stmt == nil {
@@ -224,14 +190,17 @@ func (r *GiftCardRepositoryImpl) UpdateGiftCardStatus(c context.Context, receive
 		r.mysqlRepo.SetStmt("stmtUpdateGiftCart", ps)
 		stmt = ps
 	}
-	res, err := stmt.ExecContext(c,
-		status, receiverID, giftCartID)
-	if err != nil {
-		log.Println(err)
+	if status != "accept" && status != "reject" {
 		return giftCartConst.ERR_UPDATE_GIFT_CART
 	}
-	_, err1 := res.RowsAffected()
+	res, err1 := stmt.ExecContext(c,
+		status, receiverID, giftCartID)
 	if err1 != nil {
+		log.Println(err1)
+		return giftCartConst.ERR_UPDATE_GIFT_CART
+	}
+	_, err2 := res.RowsAffected()
+	if err2 != nil {
 		return giftCartConst.ERR_UPDATE_GIFT_CART
 	}
 	return nil
