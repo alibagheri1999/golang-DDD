@@ -2,6 +2,7 @@ package main
 
 import (
 	m "github.com/labstack/echo/v4/middleware"
+	"log"
 	appConfig "remote-task/config"
 	"remote-task/domain/giftCart/repository"
 	repository2 "remote-task/domain/user/repository"
@@ -9,10 +10,12 @@ import (
 	"remote-task/interfaces/http/handler"
 	"remote-task/interfaces/http/middleware"
 	"remote-task/interfaces/http/routers"
+	migrator "remote-task/migrator"
 	"time"
 )
 
 func main() {
+	applyMigrations := false
 	appConfig.Init()
 	dbCfg := appConfig.Get().Mysql
 	appCfg := appConfig.Get().App
@@ -21,6 +24,11 @@ func main() {
 		panic(err)
 	}
 	defer repo.Close()
+	if applyMigrations {
+		if err := migrator.New(repo).Run("up", 0); err != nil {
+			log.Printf("serve migration error: %v\n", err)
+		}
+	}
 	GiftCarRepo := repository.NewGiftCardRepository(repo)
 	UserRepo := repository2.NewUserRepository(repo)
 	giftCartService := handler.NewGiftCartHandler(GiftCarRepo, UserRepo)

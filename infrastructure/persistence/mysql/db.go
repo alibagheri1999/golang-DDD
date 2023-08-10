@@ -17,6 +17,8 @@ type Repositories struct {
 	mu         sync.Mutex
 }
 
+const Dialect = "mysql"
+
 // NewRepositories create new my sql instance for other repositories
 func NewRepositories(DbUser, DbPassword, DbPort, DbHost, DbName string) (*Repositories, error) {
 	dsn := fmt.Sprintf(
@@ -27,7 +29,6 @@ func NewRepositories(DbUser, DbPassword, DbPort, DbHost, DbName string) (*Reposi
 		DbPort,
 		DbName,
 	)
-	const Dialect = "mysql"
 	db, err := sql.Open(Dialect, dsn)
 	if err != nil {
 		fmt.Println("db connection failed", err)
