@@ -14,7 +14,7 @@ type GiftCart struct {
 	ua  application.UserAppInterface
 }
 
-// GiftCart constructor
+// NewGiftCartHandler giftCart constructor to create new instance of GiftCartHandler
 func NewGiftCartHandler(gcApp application.GiftCartAppInterface, uApp application.UserAppInterface) *GiftCart {
 	return &GiftCart{
 		gca: gcApp,

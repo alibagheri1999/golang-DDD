@@ -4,28 +4,20 @@ import (
 	"context"
 	"errors"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/joho/godotenv"
-	"log"
-	"os"
+	appConfig "remote-task/config"
 	"remote-task/domain/user/repository"
 	"remote-task/domain/user/userConst"
 	"remote-task/infrastructure/persistence/mysql"
 	"testing"
 )
 
-func Test_Gift_Cart_Repo(t *testing.T) {
-	err := godotenv.Load("/Users/alibagheri/GolandProjects/remote-task/.env")
+// Test_User_Repo test all methods in user repository
+func Test_User_Repo(t *testing.T) {
+	appConfig.Init()
+	dbCfg := appConfig.Get().Mysql
+	repo, err := mysql.NewRepositories(dbCfg.Username, dbCfg.Password, dbCfg.Port, dbCfg.Host, dbCfg.Name)
 	if err != nil {
-		log.Fatal("Error loading .env file", err)
-	}
-	host := os.Getenv("DB_HOST")
-	password := os.Getenv("DB_PASSWORD")
-	user := os.Getenv("DB_USER")
-	dbname := os.Getenv("DB_NAME")
-	port := os.Getenv("DB_PORT")
-	repo, err1 := mysql.NewRepositories(user, password, port, host, dbname)
-	if err1 != nil {
-		t.Fatal(err1)
+		t.Fatal(err)
 	}
 	UserRepo := repository.NewUserRepository(repo)
 	getByIDTestCase := []GetByIDTestCase{
@@ -42,7 +34,7 @@ func Test_Gift_Cart_Repo(t *testing.T) {
 	}
 	for _, tc := range getByIDTestCase {
 		t.Run(tc.name, func(t *testing.T) {
-			_, err := UserRepo.GetUserByID(context.Background(), tc.id)
+			_, err := UserRepo.GetByID(context.Background(), tc.id)
 			if !errors.Is(err, tc.errExpected) {
 				t.Errorf("expected error %v, got %v", tc.errExpected, err)
 			}

@@ -6,8 +6,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"math"
-	//giftRepo "remote-task/domain/giftCart/repository"
-	//userRepo "remote-task/domain/user/repository"
 	"remote-task/utilities"
 	"sync"
 	"time"
@@ -19,6 +17,7 @@ type Repositories struct {
 	mu         sync.Mutex
 }
 
+// NewRepositories create new my sql instance for other repositories
 func NewRepositories(DbUser, DbPassword, DbPort, DbHost, DbName string) (*Repositories, error) {
 	dsn := fmt.Sprintf(
 		"%s:%s@(%s:%v)/%s?collation=utf8mb4_unicode_ci&parseTime=True",
@@ -72,15 +71,17 @@ func NewRepositories(DbUser, DbPassword, DbPort, DbHost, DbName string) (*Reposi
 	}, nil
 }
 
-// closes the  database connection
+// Stmt declare stmt the database connection
 func (mr *Repositories) Stmt(id string) *sql.Stmt {
 	return mr.Statements[id]
 }
 
+// SetStmt set stmt the database connection
 func (mr *Repositories) SetStmt(id string, stmt *sql.Stmt) {
 	mr.Statements[id] = stmt
 }
 
+// Ping pings the database connection
 func (mr *Repositories) Ping() error {
 	if err := mr.Db.Ping(); err != nil {
 		return err
@@ -89,10 +90,12 @@ func (mr *Repositories) Ping() error {
 	return nil
 }
 
+// DB returns the database connection
 func (mr *Repositories) DB() *sql.DB {
 	return mr.Db
 }
 
+// Close closes the  database connection
 func (mr *Repositories) Close() {
 	for _, stmt := range mr.Statements {
 		_ = stmt.Close()

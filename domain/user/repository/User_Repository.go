@@ -9,20 +9,20 @@ import (
 	"sync"
 )
 
-// giftCardRepositoryImpl is an implementation of the GiftCardRepository
+// UserRepositoryImpl is an implementation of the GiftCardRepository
 type UserRepositoryImpl struct {
 	mysqlRepo *mysql.Repositories
 	mu        sync.Mutex
 }
 
-// NewUserRepository creates a new instance of giftCardRepositoryImpl
+// NewUserRepository creates a new instance of userRepositoryImpl
 func NewUserRepository(mysqlRepo *mysql.Repositories) UserRepository {
 	return &UserRepositoryImpl{
 		mysqlRepo: mysqlRepo,
 	}
 }
 
-// GetUserByID get a user with its id
+// GetByID get a user with its id
 func (r *UserRepositoryImpl) GetByID(c context.Context, id int) (*entity.User, error) {
 	query := utilities.GET_USER_BY_ID
 	stmt := r.mysqlRepo.Stmt("stmtGetUserByID")

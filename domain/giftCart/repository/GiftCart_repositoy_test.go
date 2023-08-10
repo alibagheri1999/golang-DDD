@@ -12,6 +12,7 @@ import (
 	"testing"
 )
 
+// Test_Gift_Cart_Repo test all methods in gift cart repository
 func Test_Gift_Cart_Repo(t *testing.T) {
 	appConfig.Init()
 	dbCfg := appConfig.Get().Mysql

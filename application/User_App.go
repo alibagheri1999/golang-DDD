@@ -16,6 +16,7 @@ type UserAppInterface interface {
 	GetByID(c context.Context, id int) (*entity.User, error)
 }
 
+// GetByID isolating getByID from user repo to use in interface layer
 func (u *userApp) GetByID(c context.Context, id int) (*entity.User, error) {
 	return u.ur.GetByID(c, id)
 }

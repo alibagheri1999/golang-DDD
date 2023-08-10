@@ -5,6 +5,7 @@ import (
 	"net/http"
 )
 
+// NewRouter initiate new route to using api and middlewares
 func NewRouter() *echo.Echo {
 
 	router := echo.New()

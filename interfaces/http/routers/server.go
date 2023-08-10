@@ -6,12 +6,13 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"os/signal"
+	_ "os/signal"
 	"time"
 
 	"github.com/labstack/echo/v4"
 )
 
+// NewServer initiate new instance of http server
 func NewServer(router *echo.Echo, port int, gracefulShutdown time.Duration) *Server {
 	return &Server{
 		addr:             fmt.Sprintf("%s:%v", os.Getenv("HOST_IP"), port),
@@ -26,6 +27,7 @@ type Server struct {
 	gracefulShutdown time.Duration
 }
 
+// StartListening force server to start listening on a port
 func (s *Server) StartListening() {
 
 	go func() {
@@ -35,7 +37,6 @@ func (s *Server) StartListening() {
 	}()
 
 	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, os.Interrupt)
 	<-quit
 
 	log.Printf("server shutting down in %s...\n", s.gracefulShutdown)

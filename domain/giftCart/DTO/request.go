@@ -1,7 +1,5 @@
 package DTO
 
-//import "github.com/badoux/checkmail"
-
 type SendGiftCartRequest struct {
 	SenderID   int     `json:"sender_id"`
 	ReceiverID int     `json:"receiver_id"`
@@ -14,6 +12,7 @@ type UpdateGiftCartRequest struct {
 	GiftCartID int    `json:"gift_cart_id"`
 }
 
+// SendGiftValidate validating the requirement fields
 func (u *SendGiftCartRequest) SendGiftValidate() map[string]string {
 	var errorMessages = make(map[string]string)
 	if u.SenderID == 0 {
@@ -28,6 +27,7 @@ func (u *SendGiftCartRequest) SendGiftValidate() map[string]string {
 	return errorMessages
 }
 
+// UpdateGiftValidate validating the requirement fields
 func (u *UpdateGiftCartRequest) UpdateGiftValidate() map[string]string {
 	var errorMessages = make(map[string]string)
 	if u.ReceiverID == 0 {

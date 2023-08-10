@@ -7,6 +7,7 @@ import (
 	"remote-task/interfaces/http/handler"
 )
 
+// RegisterRoutes register all routes that we want to use in app
 func RegisterRoutes(router *echo.Echo, handler *handler.Handlers) {
 
 	v1 := router.Group("/api/v1")
