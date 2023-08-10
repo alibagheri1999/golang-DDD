@@ -15,7 +15,7 @@ import (
 )
 
 func main() {
-	applyMigrations := false
+	applyMigrations := true
 	appConfig.Init()
 	dbCfg := appConfig.Get().Mysql
 	appCfg := appConfig.Get().App

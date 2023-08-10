@@ -88,7 +88,7 @@ func (m *Migrator) agent() migrate.MigrationSet {
 func (m *Migrator) getFilesSource() *migrate.EmbedFileSystemMigrationSource {
 	return &migrate.EmbedFileSystemMigrationSource{
 		FileSystem: fsMigrations,
-		Root:       "migrator",
+		Root:       "migrations",
 	}
 }
 
