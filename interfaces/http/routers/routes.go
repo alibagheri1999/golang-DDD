@@ -21,5 +21,5 @@ func RegisterRoutes(router *echo.Echo, handler *handler.Handlers) {
 	v1.GET("/gift-cart/send-carts/:senderID", handler.GiftCartService.GetMySentCarts)
 
 	// swagger
-	v1.Any("/swagger/*", echoSwagger.WrapHandler)
+	v1.GET("/swagger/*", echoSwagger.WrapHandler)
 }
