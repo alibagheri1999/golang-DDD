@@ -177,11 +177,11 @@ func TestMyGiftCart(t *testing.T) {
 		assert.Equal(t, v.statusCode, res.StatusCode)
 		for i := 0; i < len(response.Message.Data); i++ {
 			el := response.Message.Data[i]
-			i, err := strconv.Atoi(v.receiverID)
+			ir, err := strconv.Atoi(v.receiverID)
 			if err != nil {
 				t.Fatal(err)
 			}
-			assert.Equal(t, el.ReceiverID, i)
+			assert.Equal(t, el.ReceiverID, ir)
 		}
 	}
 }
@@ -246,11 +246,11 @@ func TestMySendGiftCart(t *testing.T) {
 		assert.Equal(t, v.statusCode, res.StatusCode)
 		for i := 0; i < len(response.Message.Data); i++ {
 			el := response.Message.Data[i]
-			i, err := strconv.Atoi(v.senderID)
+			ir, err := strconv.Atoi(v.senderID)
 			if err != nil {
 				t.Fatal(err)
 			}
-			assert.Equal(t, el.SenderID, i)
+			assert.Equal(t, el.SenderID, ir)
 		}
 	}
 }
