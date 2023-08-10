@@ -23,7 +23,7 @@ func NewUserRepository(mysqlRepo *mysql.Repositories) UserRepository {
 }
 
 // GetUserByID get a user with its id
-func (r *UserRepositoryImpl) GetUserByID(c context.Context, id int) (*entity.User, error) {
+func (r *UserRepositoryImpl) GetByID(c context.Context, id int) (*entity.User, error) {
 	query := utilities.GET_USER_BY_ID
 	stmt := r.mysqlRepo.Stmt("stmtGetUserByID")
 	if stmt == nil {

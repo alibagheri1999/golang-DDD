@@ -43,14 +43,14 @@ func (gc *GiftCart) SendGiftCart(c echo.Context) error {
 		res.Message = "validation error"
 		return echo.NewHTTPError(http.StatusBadRequest, res)
 	}
-	sUser, err1 := gc.ua.GetUserByID(c.Request().Context(), req.ReceiverID)
+	sUser, err1 := gc.ua.GetByID(c.Request().Context(), req.ReceiverID)
 	if err1 != nil || sUser.Username == "" {
 		res.Code = http.StatusNotFound
 		res.Error = err1.Error()
 		res.Message = "Receiver error"
 		return echo.NewHTTPError(http.StatusNotFound, res)
 	}
-	rUser, err2 := gc.ua.GetUserByID(c.Request().Context(), req.SenderID)
+	rUser, err2 := gc.ua.GetByID(c.Request().Context(), req.SenderID)
 	if err2 != nil || rUser.Username == "" {
 		res.Code = http.StatusNotFound
 		res.Error = err2.Error()
@@ -95,7 +95,7 @@ func (gc *GiftCart) UpdateGiftCart(c echo.Context) error {
 		res.Message = "validation error"
 		return echo.NewHTTPError(http.StatusBadRequest, res)
 	}
-	sUser, err1 := gc.ua.GetUserByID(c.Request().Context(), req.ReceiverID)
+	sUser, err1 := gc.ua.GetByID(c.Request().Context(), req.ReceiverID)
 	if err1 != nil || sUser.Username == "" {
 		res.Code = http.StatusNotFound
 		res.Error = err1.Error()
@@ -141,7 +141,7 @@ func (gc *GiftCart) GetMyGiftCarts(c echo.Context) error {
 		res.Error = "type must be 1 or 2"
 		return echo.NewHTTPError(http.StatusBadRequest, res)
 	}
-	sUser, err2 := gc.ua.GetUserByID(c.Request().Context(), iReceiverID)
+	sUser, err2 := gc.ua.GetByID(c.Request().Context(), iReceiverID)
 	if err2 != nil || sUser.Username == "" {
 		res.Code = http.StatusNotFound
 		res.Error = err2.Error()
@@ -182,7 +182,7 @@ func (gc *GiftCart) GetMySentCarts(c echo.Context) error {
 		res.Error = "validation error"
 		return echo.NewHTTPError(http.StatusBadRequest, res)
 	}
-	sUser, err2 := gc.ua.GetUserByID(c.Request().Context(), iSenderID)
+	sUser, err2 := gc.ua.GetByID(c.Request().Context(), iSenderID)
 	if err2 != nil || sUser.Username == "" {
 		res.Code = http.StatusNotFound
 		res.Error = err2.Error()

@@ -6,5 +6,5 @@ import (
 )
 
 type UserRepository interface {
-	GetUserByID(c context.Context, id int) (*entity.User, error)
+	GetByID(c context.Context, id int) (*entity.User, error)
 }

@@ -7,6 +7,9 @@ github.com/KyleBanks/depth
 ## explicit
 # github.com/cpuguy83/go-md2man/v2 v2.0.2
 ## explicit; go 1.11
+# github.com/davecgh/go-spew v1.1.1
+## explicit
+github.com/davecgh/go-spew/spew
 # github.com/go-openapi/jsonpointer v0.20.0
 ## explicit; go 1.18
 github.com/go-openapi/jsonpointer
@@ -53,10 +56,16 @@ github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.19
 ## explicit; go 1.15
 github.com/mattn/go-isatty
+# github.com/pmezard/go-difflib v1.0.0
+## explicit
+github.com/pmezard/go-difflib/difflib
 # github.com/russross/blackfriday/v2 v2.1.0
 ## explicit
 # github.com/shurcooL/sanitized_anchor_name v1.0.0
 ## explicit
+# github.com/stretchr/testify v1.8.4
+## explicit; go 1.20
+github.com/stretchr/testify/assert
 # github.com/swaggo/echo-swagger v1.4.0
 ## explicit; go 1.17
 github.com/swaggo/echo-swagger

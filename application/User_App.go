@@ -13,9 +13,9 @@ type userApp struct {
 var _ UserAppInterface = &userApp{}
 
 type UserAppInterface interface {
-	GetUserByID(c context.Context, id int) (*entity.User, error)
+	GetByID(c context.Context, id int) (*entity.User, error)
 }
 
-func (u *userApp) GetUserByID(c context.Context, id int) (*entity.User, error) {
-	return u.ur.GetUserByID(c, id)
+func (u *userApp) GetByID(c context.Context, id int) (*entity.User, error) {
+	return u.ur.GetByID(c, id)
 }
