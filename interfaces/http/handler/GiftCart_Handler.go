@@ -152,7 +152,7 @@ func (gc *GiftCart) GetMyGiftCarts(c echo.Context) error {
 	}
 	if iStat != 1 && iStat != 2 && iStat != 3 {
 		res.Code = http.StatusBadRequest
-		res.Error = "type must be 1 or 2"
+		res.Error = "type must be 1 , 2 or 3"
 		return echo.NewHTTPError(http.StatusBadRequest, res)
 	}
 	sUser, err2 := gc.ua.GetByID(c.Request().Context(), iReceiverID)

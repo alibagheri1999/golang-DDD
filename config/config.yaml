@@ -1,0 +1,11 @@
+app:
+  HOST_IP: 127.0.0.1
+  ENV: debugging
+  APP_PORT: 8080
+
+mysql:
+  DB_HOST: 127.0.0.1
+  DB_USER: alibagheri
+  DB_PASSWORD: Abcd1234
+  DB_NAME: mysql
+  DB_PORT: 3306

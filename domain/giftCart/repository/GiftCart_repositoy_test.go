@@ -4,9 +4,7 @@ import (
 	"context"
 	"errors"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/joho/godotenv"
-	"log"
-	"os"
+	appConfig "remote-task/config"
 	"remote-task/domain/giftCart/DTO"
 	"remote-task/domain/giftCart/giftCartConst"
 	"remote-task/domain/giftCart/repository"
@@ -15,18 +13,11 @@ import (
 )
 
 func Test_Gift_Cart_Repo(t *testing.T) {
-	err := godotenv.Load("/Users/alibagheri/GolandProjects/remote-task/.env")
+	appConfig.Init()
+	dbCfg := appConfig.Get().Mysql
+	repo, err := mysql.NewRepositories(dbCfg.Username, dbCfg.Password, dbCfg.Port, dbCfg.Host, dbCfg.Name)
 	if err != nil {
-		log.Fatal("Error loading .env file", err)
-	}
-	host := os.Getenv("DB_HOST")
-	password := os.Getenv("DB_PASSWORD")
-	user := os.Getenv("DB_USER")
-	dbname := os.Getenv("DB_NAME")
-	port := os.Getenv("DB_PORT")
-	repo, err1 := mysql.NewRepositories(user, password, port, host, dbname)
-	if err1 != nil {
-		t.Fatal(err1)
+		t.Fatal(err)
 	}
 	GiftCarRepo := repository.NewGiftCardRepository(repo)
 	sentTestCase := []SentTestCase{

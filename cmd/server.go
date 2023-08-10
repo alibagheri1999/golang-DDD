@@ -1,37 +1,22 @@
 package main
 
 import (
-	"github.com/joho/godotenv"
 	m "github.com/labstack/echo/v4/middleware"
-	"log"
-	"os"
+	appConfig "remote-task/config"
 	"remote-task/domain/giftCart/repository"
 	repository2 "remote-task/domain/user/repository"
 	"remote-task/infrastructure/persistence/mysql"
 	"remote-task/interfaces/http/handler"
 	"remote-task/interfaces/http/middleware"
 	"remote-task/interfaces/http/routers"
-	"strconv"
 	"time"
 )
 
 func main() {
-	err := godotenv.Load("/Users/alibagheri/GolandProjects/remote-task/.env")
-	if err != nil {
-		log.Fatal("Error loading .env file", err)
-	}
-	host := os.Getenv("DB_HOST")
-	password := os.Getenv("DB_PASSWORD")
-	user := os.Getenv("DB_USER")
-	dbname := os.Getenv("DB_NAME")
-	dbport := os.Getenv("DB_PORT")
-	port := os.Getenv("APP_PORT")
-	log.Println(port)
-	iPort, err := strconv.Atoi(port)
-	if err != nil {
-		panic(err)
-	}
-	repo, err := mysql.NewRepositories(user, password, dbport, host, dbname)
+	appConfig.Init()
+	dbCfg := appConfig.Get().Mysql
+	appCfg := appConfig.Get().App
+	repo, err := mysql.NewRepositories(dbCfg.Username, dbCfg.Password, dbCfg.Port, dbCfg.Host, dbCfg.Name)
 	if err != nil {
 		panic(err)
 	}
@@ -47,5 +32,5 @@ func main() {
 	router.Use(middleware.CORS())
 
 	routers.RegisterRoutes(router, handlers)
-	routers.NewServer(router, iPort, time.Duration(1)).StartListening()
+	routers.NewServer(router, appCfg.Port, time.Duration(1)).StartListening()
 }
