@@ -71,7 +71,7 @@ func (gc *GiftCart) SendGiftCart(c echo.Context) error {
 		res.Message = "validation error"
 		return c.JSON(res.Code, res)
 	}
-	return c.JSON(http.StatusOK, res)
+	return c.JSON(http.StatusCreated, res)
 }
 
 // UpdateGiftCart  update Gift Cart godoc
